@@ -1,16 +1,297 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MoodLift – Welcome Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Merriweather', serif;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #d8e2dc, #ffe5ec);
+      color: #4a4e69;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 25% 40%, #fcd5ce 2px, transparent 4px),
+        radial-gradient(circle at 70% 65%, #fbc4ab77 3px, transparent 6px),
+        radial-gradient(circle at 85% 20%, #fae1dd88 1.5px, transparent 3px);
+      background-size: 100% 100%;
+      animation: particlesDrift 40s linear infinite;
+      filter: blur(1px);
+      opacity: 0.35;
+    }
+
+    @keyframes particlesDrift {
+      0% { background-position: 0% 0%, 0% 0%, 0% 0%; }
+      100% { background-position: 100% 100%, 100% 100%, 100% 100%; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      margin: auto;
+    }
+
+    h1 {
+      font-family: 'Homemade Apple', cursive;
+      font-size: 2.2rem;
+      color: #4a4e69;
+      margin: 1rem 0 2rem;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+      letter-spacing: 0.5px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      margin: 0.6rem auto;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 40px;
+      background: linear-gradient(135deg, #a2d2ff, #ffafcc);
+      color: #4a4e69;
+      box-shadow: 0 6px 20px rgba(255, 175, 204, 0.4);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-shadow: 0 1px 1px rgba(255,255,255,0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 10px 25px rgba(255, 175, 204, 0.6);
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+      box-shadow: inset 0 4px 10px rgba(255, 175, 204, 0.4);
+    }
+
+    .mascot {
+      margin: 0 auto 1.5rem;
+      width: 160px;
+      height: 160px;
+      position: relative;
+      cursor: default;
+      filter: drop-shadow(0 4px 6px rgba(255, 175, 204, 0.25));
+      transition: transform 0.3s ease;
+      border-radius: 50%;
+      background: #ffd6d9;
+      box-shadow:
+        0 8px 20px rgba(255, 160, 180, 0.3),
+        0 0 30px 8px rgba(255, 160, 180, 0.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mascot:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 6px 10px rgba(255, 175, 204, 0.35));
+    }
+
+    .cat-face {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      background: #fff0f3;
+      border-radius: 50% 50% 55% 55% / 60% 60% 40% 40%;
+      box-shadow: 0 4px 10px rgba(255, 160, 180, 0.4);
+    }
+
+    .ear {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      background: #ffd6d9;
+      border-radius: 50% 50% 20% 80% / 60% 60% 20% 80%;
+      top: -18px;
+      box-shadow: 0 3px 8px rgba(255, 160, 180, 0.3);
+    }
+    .ear.left {
+      left: 4px;
+      transform: rotate(-15deg);
+      clip-path: polygon(0 100%, 100% 0, 100% 100%);
+    }
+    .ear.right {
+      right: 4px;
+      transform: rotate(15deg);
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+
+    .inner-ear {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: #ffaecf;
+      border-radius: 50%;
+      top: 12px;
+      left: 12px;
+    }
+    .ear.right .inner-ear {
+      left: auto;
+      right: 12px;
+    }
+
+    .eye {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: #4a4e69;
+      border-radius: 50%;
+      top: 45px;
+      box-shadow: inset 0 3px 0 rgba(255,255,255,0.8);
+    }
+    .eye.left {
+      left: 28px;
+    }
+    .eye.right {
+      right: 28px;
+    }
+
+    .eye::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      height: 8px;
+      border-bottom: 2px solid #4a4e69;
+      border-radius: 0 0 20px 20px;
+      transform: translate(-50%, -50%) rotate(15deg);
+      background: transparent;
+    }
+    .eye.right::before {
+      transform: translate(-50%, -50%) rotate(-15deg);
+    }
+
+    .nose {
+      position: absolute;
+      top: 75px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 14px;
+      background: #ffafcc;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      filter: drop-shadow(0 1px 1px #ffaecf);
+    }
+
+    .mouth {
+      position: absolute;
+      top: 88px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px;
+      height: 18px;
+      border-bottom: 3px solid #ff7faa;
+      border-radius: 0 0 40px 40px;
+      box-shadow: 0 2px 3px rgba(255, 175, 204, 0.6);
+    }
+
+    .whisker {
+      position: absolute;
+      width: 40px;
+      height: 2px;
+      background: #ff7faa;
+      top: 85px;
+      border-radius: 10px;
+    }
+    .whisker.left1 {
+      left: 10px;
+      transform: rotate(8deg);
+    }
+    .whisker.left2 {
+      left: 12px;
+      top: 95px;
+      transform: rotate(-8deg);
+    }
+    .whisker.right1 {
+      right: 10px;
+      transform: rotate(-8deg);
+    }
+    .whisker.right2 {
+      right: 12px;
+      top: 95px;
+      transform: rotate(8deg);
+    }
+
+    @media (max-height: 650px) {
+      body {
+        align-items: flex-start;
+        padding-top: 2rem;
+      }
+      .container {
+        margin-top: 2rem;
+      }
+    }
+  </style>
 </head>
-
 <body>
-  Hello world
-  <script src="script.js"></script>
-</body>
+  <div class="particles"></div>
 
+  <main class="container" role="main">
+    <div class="mascot" aria-label="Happy cat mascot">
+      <div class="cat-face">
+        <div class="ear left">
+          <div class="inner-ear"></div>
+        </div>
+        <div class="ear right">
+          <div class="inner-ear"></div>
+        </div>
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+        <div class="nose"></div>
+        <div class="mouth"></div>
+        <div class="whisker left1"></div>
+        <div class="whisker left2"></div>
+        <div class="whisker right1"></div>
+        <div class="whisker right2"></div>
+      </div>
+    </div>
+
+    <h1>Welcome home to MoodLift 🌸</h1>
+
+    <button class="btn" onclick="location.href='viberoom.html'">Enter Vibe Room</button>
+    <button class="btn" onclick="location.href='micro-mindfulness.html'">Micro Mindfulness Break</button>
+    <button class="btn" onclick="location.href='gratitude-bulletin.html'">Gratitude & Goals Bulletin</button>
+
+    <button class="btn" onclick="location.href='safe-space.html'">Go to Safe Space</button>
+
+    <p style="margin-top: 2rem; font-size: 0.9rem; color: #7b7f9e; user-select: none; font-style: italic;">
+      Created with care by <strong>Radoan</strong> ❤️
+    </p>
+  </main>
+</body>
 </html>

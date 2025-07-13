@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Safe Space – MoodLift</title>
+  <link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&family=PT+Serif&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'PT Serif', serif;
+      user-select: none;
+    }
+    body {
+      background: linear-gradient(135deg, #f2e9e4, #c9ada7);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: #4b3b3b;
+      position: relative;
+      flex-direction: column;
+    }
+    .container {
+      background: #fff8f0;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 25px;
+      box-shadow:
+        0 10px 20px rgba(201, 173, 167, 0.3),
+        inset 0 0 30px #f6e8e3;
+      padding: 2.5rem 3rem;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      animation: fadeInUp 1s ease forwards;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    h1 {
+      font-family: 'Homemade Apple', cursive;
+      font-size: 3rem;
+      color: #a67b5b;
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 4px rgba(166, 123, 91, 0.5);
+    }
+
+    p {
+      font-size: 1.15rem;
+      margin-bottom: 1.8rem;
+      font-style: italic;
+      color: #7e6550;
+    }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 1.1rem 1.3rem;
+      border-radius: 18px;
+      border: none;
+      resize: none;
+      font-size: 1.15rem;
+      font-family: 'PT Serif', serif;
+      background: #f9f0e8;
+      color: #5b4636;
+      box-shadow:
+        inset 2px 2px 5px #e2cfc5,
+        inset -2px -2px 5px #fef9f6;
+      outline: none;
+      transition: box-shadow 0.3s ease;
+    }
+    textarea:focus {
+      box-shadow:
+        0 0 10px 3px #d5b6a0;
+      background: #fff3eb;
+    }
+
+    .mirror-output {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #8a7059;
+      font-style: italic;
+      min-height: 45px;
+      user-select: text;
+    }
+
+    .affirmation {
+      margin-top: 2rem;
+      font-size: 1.25rem;
+      color: #a97c50;
+      font-weight: 600;
+      font-style: normal;
+      letter-spacing: 0.02em;
+      transition: opacity 0.3s ease;
+      min-height: 50px;
+      user-select: text;
+      text-shadow: 0 0 5px #e6d1bc;
+    }
+
+    button {
+      margin-top: 1.8rem;
+      background: #a67b5b;
+      border: none;
+      color: #fff9f5;
+      font-weight: 700;
+      padding: 0.85rem 2.3rem;
+      font-size: 1.1rem;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(166, 123, 91, 0.6);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      user-select: none;
+      margin-right: 1rem;
+      min-width: 140px;
+    }
+    button:last-child {
+      margin-right: 0;
+    }
+    button:hover {
+      background-color: #d1a87e;
+      transform: scale(1.05);
+      box-shadow: 0 7px 20px rgba(209, 168, 126, 0.8);
+    }
+
+    .fade-away {
+      animation: fadeOut 0.8s forwards;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(-15px); }
+    }
+
+    .particles {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(circle at 30% 40%, #d7bfae55 1px, transparent 2px),
+                  radial-gradient(circle at 70% 60%, #d7bfae33 2px, transparent 3px);
+      animation: particlesDrift 30s linear infinite;
+    }
+    @keyframes particlesDrift {
+      0% {background-position: 0% 0%, 0% 0%;}
+      100% {background-position: 100% 100%, 100% 100%;}
+    }
+
+    #mirrorModeContainer {
+      margin-top: 1.5rem;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(166, 123, 91, 0.7);
+      display: none;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      user-select: none;
+    }
+    #mirrorVideo {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      background: #ddd;
+      transform: scaleX(-1);
+    }
+  </style>
+</head>
+<body>
+  <div class="particles"></div>
+
+  <main class="container" role="main" aria-label="Safe space for emotional venting">
+    <h1>🌿 Your Safe Space</h1>
+    <p>Write freely, breathe deeply. This space is just for you, no judgments, no saving.</p>
+
+    <textarea id="ventArea" placeholder="What’s on your mind today?"></textarea>
+    <div class="mirror-output" id="mirrorText" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="affirmation" id="affirmation" aria-live="polite" aria-atomic="true">
+      You are enough just as you are. One step at a time.
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <button onclick="toggleMirrorMode()" id="mirrorToggleBtn">🪞 Open Mirror Mode</button>
+      <button onclick="clearVenting()">💨 Let It Go</button>
+      <button onclick="cycleAffirmation()">💡 Next Affirmation</button>
+      <button onclick="window.location.href='index.html'">⬅️ Back to MoodLift</button>
+    </div>
+
+    <div id="mirrorModeContainer">
+      <video id="mirrorVideo" autoplay playsinline muted></video>
+    </div>
+  </main>
+
+  <script>
+    const mirror = document.getElementById("mirrorText");
+    const ventArea = document.getElementById("ventArea");
+    const affirmation = document.getElementById("affirmation");
+    const mirrorModeContainer = document.getElementById("mirrorModeContainer");
+    const mirrorVideo = document.getElementById("mirrorVideo");
+    const mirrorToggleBtn = document.getElementById("mirrorToggleBtn");
+
+    let stream = null;
+    let mirrorModeOn = false;
+
+    const affirmations = [
+      "You are enough just as you are. One step at a time.",
+      "This moment will pass; you are stronger than you think.",
+      "Feel every feeling — they are part of your beautiful journey.",
+      "Take all the time you need. You are worthy of peace.",
+      "Gentle breaths in, soft releases out.",
+      "You hold so much strength within you."
+    ];
+
+    ventArea.addEventListener("input", () => {
+      mirror.innerText = `🪞 You said: "${ventArea.value}"`;
+    });
+
+    function clearVenting() {
+      ventArea.classList.add("fade-away");
+      mirror.classList.add("fade-away");
+      if (mirrorModeOn) {
+        stopMirrorMode();
+      }
+      setTimeout(() => {
+        ventArea.value = "";
+        mirror.innerText = "";
+        ventArea.classList.remove("fade-away");
+        mirror.classList.remove("fade-away");
+      }, 800);
+    }
+
+    function cycleAffirmation() {
+      const current = affirmation.innerText;
+      let next = affirmations[Math.floor(Math.random() * affirmations.length)];
+      while (next === current) {
+        next = affirmations[Math.floor(Math.random() * affirmations.length)];
+      }
+      affirmation.innerText = next;
+    }
+
+    async function toggleMirrorMode() {
+      if (mirrorModeOn) {
+        stopMirrorMode();
+      } else {
+        startMirrorMode();
+      }
+    }
+
+    async function startMirrorMode() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Sorry, your browser does not support camera access.");
+        return;
+      }
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        mirrorVideo.srcObject = stream;
+        mirrorModeContainer.style.display = "block";
+        mirrorToggleBtn.textContent = "🚪 Close Mirror Mode";
+        mirrorModeOn = true;
+      } catch (error) {
+        alert("Could not access the camera. Please allow camera permissions.");
+        console.error(error);
+      }
+    }
+
+    function stopMirrorMode() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+      mirrorVideo.srcObject = null;
+      mirrorModeContainer.style.display = "none";
+      mirrorToggleBtn.textContent = "🪞 Open Mirror Mode";
+      mirrorModeOn = false;
+    }
+  </script>
+</body>
+</html>

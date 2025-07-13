@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MoodLift – Vibe Room</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.1.1/tsparticles.bundle.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      background: linear-gradient(-45deg, #1a1a40, #4b134f, #0f2027);
+      background-size: 600% 600%;
+      animation: gradientBG 15s ease infinite;
+      color: white;
+      min-height: 100vh;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: fadeIn 1.2s ease-in-out;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+    .box {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: fadeInUp 1s ease;
+      position: relative;
+      z-index: 2;
+    }
+    select, button, input {
+      padding: 0.8rem 1.2rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      margin-top: 1rem;
+      width: 80%;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    select:focus, input:focus {
+      outline: none;
+      box-shadow: 0 0 8px #ff4d4d;
+      transform: scale(1.03);
+    }
+    button {
+      background-color: #ff4d4d;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(255, 77, 77, 0.6);
+      user-select: none;
+    }
+    button:hover {
+      background-color: #ff6666;
+      box-shadow: 0 6px 20px rgba(255, 102, 102, 0.8);
+      transform: scale(1.05);
+    }
+    .output {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      background: rgba(255,255,255,0.08);
+      padding: 1.8rem 2rem;
+      border-radius: 12px;
+      min-height: 110px;
+      transition: all 0.5s ease;
+      animation: fadeInUp 0.5s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .output::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 50px;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(255, 77, 77, 0.2),
+        rgba(255, 77, 77, 0.2) 5px,
+        transparent 5px,
+        transparent 10px
+      );
+      transform: translate(-50%, -50%);
+      animation: wavePulse 3s ease-in-out infinite;
+      border-radius: 25px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .song-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      margin: 12px 0 8px;
+      color: #ff9999;
+      text-shadow: 0 0 5px #ff4d4d;
+      position: relative;
+      z-index: 2;
+    }
+    .artist-name {
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #ffb3b3;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 2;
+    }
+    .yt-button {
+      display: inline-block;
+      margin-top: 10px;
+      background-color: white;
+      color: #8B0000;
+      font-weight: 900;
+      padding: 0.7rem 1.6rem;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(255, 77, 77, 0.7);
+      transition: background 0.3s ease, transform 0.3s ease;
+      position: relative;
+      z-index: 2;
+      user-select: none;
+    }
+    .yt-button:hover {
+      background-color: #ffd6d6;
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(255, 102, 102, 0.9);
+    }
+    .safe-btn, .home-btn {
+      margin-top: 1.8rem;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid white;
+      padding: 0.75rem 1.8rem;
+      border-radius: 50px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.6);
+      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+      width: 80%;
+      max-width: 300px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .safe-btn:hover, .home-btn:hover {
+      background-color: rgba(255, 255, 255, 0.35);
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(255, 255, 255, 0.9);
+    }
+    #visualizer-container {
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 600px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+      position: relative;
+      user-select: none;
+    }
+    #visualizer {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    #ambientToggle {
+      margin-top: 1rem;
+      background-color: #8B0000;
+      color: white;
+      padding: 0.6rem 1.5rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 77, 77, 0.7);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      user-select: none;
+    }
+    #ambientToggle:hover {
+      background-color: #b30000;
+      transform: scale(1.05);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes wavePulse {
+      0%, 100% { background-position: 0 0; opacity: 0.3; }
+      50% { background-position: 60px 0; opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+  <div id="tsparticles"></div>
+
+  <h1>MoodLift ✨ Vibe Room</h1>
+
+  <div class="box">
+    <label for="artist">Choose an Artist:</label><br />
+    <select id="artist">
+      <option value="coldplay">Coldplay</option>
+      <option value="adele">Adele</option>
+      <option value="billie eilish">Billie Eilish</option>
+      <option value="lana del rey">Lana Del Rey</option>
+      <option value="conan gray">Conan Gray</option>
+    </select><br />
+    <input type="text" id="feeling" placeholder="How are you feeling today? (or click mic 🎤)" />
+    <button onclick="suggest()">Suggest a Song</button>
+    <button onclick="startVoiceInput()">Speak</button>
+    <div class="output" id="songResult">Your recommendation will appear here 🎵</div>
+
+    <button class="safe-btn" onclick="window.location.href='safe-space.html'">Safe Space</button>
+    <button class="home-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+
+    <button id="ambientToggle">Turn On Ambient Sound</button>
+    <div id="visualizer-container" style="display:none;">
+      <canvas id="visualizer"></canvas>
+    </div>
+  </div>
+
+  <audio id="ambientAudio" loop crossorigin="anonymous" src="https://cdn.pixabay.com/download/audio/2021/09/22/audio_91c06d740f.mp3?filename=ambient-meditation-11503.mp3"></audio>
+
+  <script>
+    async function suggest() {
+      const artist = document.getElementById("artist").value;
+      const mood = document.getElementById("feeling").value.toLowerCase();
+      let tag = "sad";
+      if (mood.includes("happy") || mood.includes("better")) tag = "happy";
+      else if (mood.includes("calm") || mood.includes("chill")) tag = "chill";
+      const url = `https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=${tag}&limit=100&api_key=554bd1c03dbd6044d44add17d77145f7&format=json`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const tracks = data.tracks.track.filter(t => t.artist.name.toLowerCase().includes(artist.toLowerCase()));
+      if (tracks.length > 0) {
+        const chosen = tracks[Math.floor(Math.random() * tracks.length)];
+        const songText = `
+          <div class="song-title">${chosen.name}</div>
+          <div class="artist-name">by ${chosen.artist.name}</div>
+          <a class="yt-button" href="https://www.youtube.com/results?search_query=${encodeURIComponent(chosen.artist.name + ' ' + chosen.name)}" target="_blank" rel="noopener noreferrer">Play on YouTube</a>
+        `;
+        document.getElementById("songResult").innerHTML = songText;
+      } else {
+        document.getElementById("songResult").innerText = "❌ No song found. Try a different feeling or artist.";
+      }
+    }
+
+    function startVoiceInput() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.start();
+      recognition.onresult = (e) => {
+        document.getElementById("feeling").value = e.results[0][0].transcript;
+        suggest();
+      };
+    }
+
+    const ambientAudio = document.getElementById('ambientAudio');
+    const ambientToggle = document.getElementById('ambientToggle');
+    const visualizerContainer = document.getElementById('visualizer-container');
+    const canvas = document.getElementById('visualizer');
+    const ctx = canvas.getContext('2d');
+    let audioCtx, analyser, source;
+    let animationId;
+    let isPlaying = false;
+
+    ambientToggle.addEventListener('click', () => {
+      if (!isPlaying) {
+        startAmbient();
+      } else {
+        stopAmbient();
+      }
+    });
+
+    function startAmbient() {
+      ambientAudio.play();
+      ambientToggle.textContent = "Turn Off Ambient Sound";
+      visualizerContainer.style.display = "block";
+
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        source = audioCtx.createMediaElementSource(ambientAudio);
+        source.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        analyser.fftSize = 128;
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      isPlaying = true;
+      animateVisualizer();
+    }
+
+    function stopAmbient() {
+      ambientAudio.pause();
+      ambientToggle.textContent = "Turn On Ambient Sound";
+      visualizerContainer.style.display = "none";
+      cancelAnimationFrame(animationId);
+      clearCanvas();
+      isPlaying = false;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function animateVisualizer() {
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      canvas.width = visualizerContainer.clientWidth;
+      canvas.height = visualizerContainer.clientHeight;
+
+      function draw() {
+        animationId = requestAnimationFrame(draw);
+
+        analyser.getByteFrequencyData(dataArray);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const barWidth = (canvas.width / bufferLength) * 1.5;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+          const barHeight = dataArray[i] / 2;
+          const r = 255;
+          const g = 77;
+          const b = 77;
+          ctx.fillStyle = `rgba(${r},${g},${b},${barHeight / 100})`;
+          ctx.shadowColor = `rgba(${r},${g},${b},0.7)`;
+          ctx.shadowBlur = 5;
+          ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+          x += barWidth + 1;
+        }
+      }
+      draw();
+    }
+
+    tsParticles.load("tsparticles", {
+      fullScreen: { enable: false },
+      background: { color: "transparent" },
+      particles: {
+        number: { value: 40 },
+        color: { value: ["#ffffff", "#ff99cc"] },
+        shape: { type: "circle" },
+        opacity: { value: 0.3 },
+        size: { value: 2 },
+        move: { enable: true, speed: 1 }
+      },
+      interactivity: {
+        events: {
+          onHover: { enable: true, mode: "repulse" }
+        },
+        modes: {
+          repulse: { distance: 50, duration: 0.4 }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
